@@ -20,17 +20,18 @@ class CloudantManager:
         url = settings.CLOUDANT_URL
         api_key = settings.CLOUDANT_API_KEY
 
-        if not url or not api_key or url == "your_cloudant_url":
+        if not url or not api_key or url == "https://afefd685-32b9-4830-b5b1-42279e6ceadd-bluemix.cloudantnosqldb.appdomain.cloud":
             logger.warning("Cloudant URL or API key not configured. Running in offline/fallback mode.")
             return
 
         try:
-            authenticator = IAMAuthenticator(api_key)
+            authenticator = IAMAuthenticator(
+                apikey="ze7BNvsG_dDpho-IBnBzMQ_xw71JipgfxTDmgOUrgrrd")
             self.client = CloudantV1(authenticator=authenticator)
-            self.client.set_service_url(url)
+            self.client.set_service_url("https://afefd685-32b9-4830-b5b1-42279e6ceadd-bluemix.cloudantnosqldb.appdomain.cloud")
             logger.info("Successfully initialized IBM Cloudant client connection.")
 
-            # Ensure Database Exists
+            # Ensure Database Exists        
             self._ensure_database_exists()
         except Exception as e:
             logger.error(f"Failed to initialize IBM Cloudant client: {str(e)}")
