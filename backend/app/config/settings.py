@@ -14,7 +14,7 @@ class Settings:
     CLOUDANT_API_KEY: str = os.getenv("CLOUDANT_API_KEY", "")
     CLOUDANT_DATABASE: str = os.getenv("CLOUDANT_DATABASE", "task_manager")
 
-    # IBM App ID Configuration
+    # IBM App ID Configuration 
     APP_ID_TENANT_ID: str = os.getenv("APP_ID_TENANT_ID", "")
     APP_ID_CLIENT_ID: str = os.getenv("APP_ID_CLIENT_ID", "")
     APP_ID_SECRET: str = os.getenv("APP_ID_SECRET", "")
@@ -22,7 +22,7 @@ class Settings:
 
     ALLOWED_ORIGINS: list[str] = [
         origin.strip()
-        for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:3000").split(",")
+        for origin in os.getenv("ALLOWED_ORIGINS", "https://task-manager-1-b2lj.onrender.com/,https://task-manager-six-omega-18.vercel.app/").split(",")
         if origin.strip()
     ]
 
