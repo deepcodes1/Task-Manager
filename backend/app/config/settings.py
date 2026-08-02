@@ -22,7 +22,7 @@ class Settings:
 
     ALLOWED_ORIGINS: list[str] = [
         origin.strip()
-        for origin in os.getenv("ALLOWED_ORIGINS", "https://task-manager-1-b2lj.onrender.com/,https://task-manager-six-omega-18.vercel.app/").split(",")
+        for origin in os.getenv("ALLOWED_ORIGINS", "https://task-manager-1-b2lj.onrender.com,https://task-manager-six-omega-18.vercel.app").split(",")
         if origin.strip()
     ]
 
