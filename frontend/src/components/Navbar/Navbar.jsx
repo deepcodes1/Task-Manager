@@ -1,13 +1,11 @@
 import { Link } from 'react-router-dom';
 import {
-  FiPlus,
   FiCloud,
   FiCheckCircle,
   FiClock,
   FiLoader,
   FiMenu,
   FiX,
-  FiDatabase,
   FiLogOut,
   FiUser
 } from 'react-icons/fi';

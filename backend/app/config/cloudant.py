@@ -25,10 +25,9 @@ class CloudantManager:
             return
 
         try:
-            authenticator = IAMAuthenticator(
-                apikey="ze7BNvsG_dDpho-IBnBzMQ_xw71JipgfxTDmgOUrgrrd")
+            authenticator = IAMAuthenticator(apikey=api_key)
             self.client = CloudantV1(authenticator=authenticator)
-            self.client.set_service_url("https://afefd685-32b9-4830-b5b1-42279e6ceadd-bluemix.cloudantnosqldb.appdomain.cloud")
+            self.client.set_service_url(url)
             logger.info("Successfully initialized IBM Cloudant client connection.")
 
             # Ensure Database Exists        

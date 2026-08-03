@@ -3,10 +3,12 @@ import { toast } from 'react-toastify';
 import taskService from '../services/taskService';
 import { getTaskId } from '../utils/helpers';
 import { TOAST_CONFIG } from '../utils/constants';
+import { useAuth } from './AuthContext';
 
 export const TaskContext = createContext(null);
 
 export const TaskProvider = ({ children }) => {
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -120,10 +122,20 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
-  // Initial fetch on app mount
+  // Fetch only after authentication has completed. This avoids firing protected
+  // requests while the session is still being restored.
   useEffect(() => {
+    if (authLoading) return;
+
+    if (!isAuthenticated) {
+      setTasks([]);
+      setSelectedTask(null);
+      setLoading(false);
+      return;
+    }
+
     fetchTasks();
-  }, [fetchTasks]);
+  }, [authLoading, isAuthenticated, fetchTasks]);
 
   // Compute filtered & sorted tasks
   const filteredTasks = useMemo(() => {

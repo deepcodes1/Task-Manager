@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create base Axios instance configured with environment variables
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://afefd685-32b9-4830-b5b1-42279e6ceadd-bluemix.cloudantnosqldb.appdomain.cloud/task_manager',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -13,15 +13,15 @@ const API = axios.create({
 // Request Interceptor
 API.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('appid_access_token');
+    const token = localStorage.getItem("appid_access_token");
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Response Interceptor

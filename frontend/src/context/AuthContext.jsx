@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect, useContext, useRef } from 'react';
 import API from '../services/axiosConfig';
 
 const AuthContext = createContext(null);
@@ -28,6 +28,9 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isMock, setIsMock] = useState(false);
+  // React Strict Mode deliberately runs effects twice in development. App ID
+  // authorization codes are single-use, so guard the callback exchange.
+  const exchangedAuthorizationCode = useRef(null);
 
   // Initialize and check url query params for OAuth authorization code callback
   useEffect(() => {
@@ -37,9 +40,14 @@ export const AuthProvider = ({ children }) => {
       const authCode = urlParams.get('code');
 
       if (authCode) {
+        if (exchangedAuthorizationCode.current === authCode) {
+          return;
+        }
+        exchangedAuthorizationCode.current = authCode;
+
         try {
           // Exchange code for secure tokens via FastAPI backend
-          const response = await API.post('/auth/token', {
+          const response = await API.post('/api/auth/token', {
             code: authCode,
             redirect_uri: window.location.origin,
           });
@@ -77,6 +85,8 @@ export const AuthProvider = ({ children }) => {
       const savedIdToken = localStorage.getItem('appid_id_token');
 
       if (savedMode === 'mock') {
+        // Repair sessions created before the development token was persisted.
+        localStorage.setItem('appid_access_token', 'mock-dev-token');
         setToken('mock-dev-token');
         setUser({
           id: 'mock-user-123',
@@ -125,6 +135,9 @@ export const AuthProvider = ({ children }) => {
 
   const loginMock = () => {
     localStorage.setItem('appid_auth_mode', 'mock');
+    // The API interceptor reads this key for every request. Persist the same
+    // development token that the backend explicitly permits in debug mode.
+    localStorage.setItem('appid_access_token', 'mock-dev-token');
     setToken('mock-dev-token');
     setUser({
       id: 'mock-user-123',
