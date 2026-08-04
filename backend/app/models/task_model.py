@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Optional
 from pydantic import BaseModel
 
@@ -7,6 +8,8 @@ class TaskModel(BaseModel):
     title: str
     description: str
     status: str
+    priority: Optional[str] = None
+    dueDate: Optional[date] = None
     created_at: str
     updated_at: str
     _id: Optional[str] = None

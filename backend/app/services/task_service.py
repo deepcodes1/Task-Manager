@@ -58,6 +58,8 @@ class TaskService:
             "title": task_data.title,
             "description": task_data.description,
             "status": task_data.status,
+            "priority": task_data.priority,
+            "dueDate": task_data.dueDate.isoformat(),
             "created_at": now,
             "updated_at": now,
         }
@@ -68,7 +70,8 @@ class TaskService:
 
     def update_task(self, task_id: str, task_data: TaskUpdate) -> Optional[Dict[str, Any]]:
         """Update existing task fields."""
-        update_dict = clean_dict(task_data.model_dump(exclude_unset=True))
+        # JSON mode serializes dates before the update is sent to Cloudant.
+        update_dict = clean_dict(task_data.model_dump(exclude_unset=True, mode="json"))
         if not update_dict:
             return self.get_task_by_id(task_id)
 

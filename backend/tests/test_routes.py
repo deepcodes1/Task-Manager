@@ -18,21 +18,27 @@ def test_create_task_success():
     payload = {
         "title": "Build FastAPI Backend",
         "description": "Create REST APIs with IBM Cloudant integration",
-        "status": "Pending"
+        "status": "Pending",
+        "priority": "High",
+        "dueDate": "2026-08-15",
     }
     response = client.post("/api/tasks", json=payload)
     assert response.status_code == 201
     json_data = response.json()
     assert json_data["success"] is True
     assert json_data["data"]["title"] == payload["title"]
-    assert json_data["data"]["status"] == "Pending"
+    assert json_data["data"]["status"] == payload["status"]
+    assert json_data["data"]["priority"] == payload["priority"]
+    assert json_data["data"]["dueDate"] == payload["dueDate"]
     assert "id" in json_data["data"]
 
 def test_create_task_validation_error():
     payload = {
         "title": "",  # Empty title invalid
         "description": "Invalid description",
-        "status": "InvalidStatus"
+        "status": "InvalidStatus",
+        "priority": "Urgent",
+        "dueDate": "not-a-date",
     }
     response = client.post("/api/tasks", json=payload)
     assert response.status_code == 422
@@ -51,7 +57,9 @@ def test_get_task_by_id_and_update_and_delete():
     create_payload = {
         "title": "Task To Edit",
         "description": "Testing CRUD flow",
-        "status": "In Progress"
+        "status": "In Progress",
+        "priority": "Medium",
+        "dueDate": "2026-08-15",
     }
     created = client.post("/api/tasks", json=create_payload).json()["data"]
     task_id = created["id"]
@@ -62,10 +70,12 @@ def test_get_task_by_id_and_update_and_delete():
     assert get_res.json()["data"]["id"] == task_id
 
     # 3. Update task
-    update_payload = {"status": "Completed"}
+    update_payload = {"status": "Completed", "priority": "Low", "dueDate": "2026-08-20"}
     put_res = client.put(f"/api/tasks/{task_id}", json=update_payload)
     assert put_res.status_code == 200
     assert put_res.json()["data"]["status"] == "Completed"
+    assert put_res.json()["data"]["priority"] == "Low"
+    assert put_res.json()["data"]["dueDate"] == "2026-08-20"
 
     # 4. Delete task
     del_res = client.delete(f"/api/tasks/{task_id}")

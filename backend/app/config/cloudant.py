@@ -20,7 +20,7 @@ class CloudantManager:
         url = settings.CLOUDANT_URL
         api_key = settings.CLOUDANT_API_KEY
 
-        if not url or not api_key or url == "https://afefd685-32b9-4830-b5b1-42279e6ceadd-bluemix.cloudantnosqldb.appdomain.cloud":
+        if not url or not api_key:
             logger.warning("Cloudant URL or API key not configured. Running in offline/fallback mode.")
             return
 

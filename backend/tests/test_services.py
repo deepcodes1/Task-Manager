@@ -10,10 +10,14 @@ def test_service_crud_workflow():
     task_input = TaskCreate(
         title="Service Unit Test Task",
         description="Testing service business logic",
-        status="Pending"
+        status="Pending",
+        priority="High",
+        dueDate="2026-08-15",
     )
     created = service.create_task(task_input)
     assert created["title"] == "Service Unit Test Task"
+    assert created["priority"] == "High"
+    assert created["dueDate"] == "2026-08-15"
     task_id = created["id"]
 
     # 2. Get task by ID
@@ -27,8 +31,10 @@ def test_service_crud_workflow():
     assert results[0]["id"] == task_id
 
     # 4. Update task
-    updated = service.update_task(task_id, TaskUpdate(status="In Progress"))
+    updated = service.update_task(task_id, TaskUpdate(status="In Progress", priority="Low", dueDate="2026-08-20"))
     assert updated["status"] == "In Progress"
+    assert updated["priority"] == "Low"
+    assert updated["dueDate"] == "2026-08-20"
 
     # 5. Delete task
     deleted = service.delete_task(task_id)

@@ -7,6 +7,13 @@ class TaskStatus(str, Enum):
 
 ALLOWED_TASK_STATUSES = [status.value for status in TaskStatus]
 
+class TaskPriority(str, Enum):
+    LOW = "Low"
+    MEDIUM = "Medium"
+    HIGH = "High"
+
+ALLOWED_TASK_PRIORITIES = [priority.value for priority in TaskPriority]
+
 # Standard API Messages
 MSG_TASK_CREATED = "Task created successfully"
 MSG_TASK_UPDATED = "Task updated successfully"
